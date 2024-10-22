@@ -20,6 +20,7 @@ model = model.to(device)
 
 Load chatglm2：
 ```sh
+from chatglm2 import *
 config = ChatGLMConfig()
 model = MyMLP(config)
 device = model.device
