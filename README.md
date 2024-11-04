@@ -11,18 +11,20 @@ MPD- Medical Paper Dataset
 
 ## Eembedding Model
 Modify in 'model/chatglm1_MMD.py'
-Replace the embedding model path:
+
+Change the embedding model according to your needs:
 ```sh
 self.embed_model = SentenceTransformer('your/path/to/moka-ai/m3e-base', device)
 ```
 
 ## Model
 
-Modify in 'train/run.py'
+Python 'train/run.py'
+
+If you need to change a different model please refer to the following code:
 
 Load chatglm1:
 ```sh
-from chatglm1 import *
 model =  MyGLU(hidden_size = 768)
 device = model.device
 model.load_state_dict(torch.load("model/best_chatglm1.ph"))
