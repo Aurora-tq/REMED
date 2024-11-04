@@ -1,7 +1,8 @@
 import torch
 import torchvision
-from chatglm1 import *
-from chatglm2 import *
+from model.chatglm1_MMD import *
+from model.chatglm2_MMD import *
+from model.chatglm1_MPD import *
 import pandas as pd
 import json
 import time
@@ -10,23 +11,14 @@ import faiss
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-from Dataset_improved import *
-from chains.local_doc_qa import LocalDocQA
+from data.data_process.Dataset_improved import *
+# from chains.local_doc_qa import LocalDocQA
 from langchain.docstore.document import Document
 from langchain.vectorstores import FAISS
 from langchain.docstore.base import AddableMixin, Docstore
 #matplotlib.use("TkAgg")
 def _default_relevance_score_fn(score: float) -> float:
         """Return a similarity score on a scale [0, 1]."""
-    # The 'correct' relevance function
-    # may differ depending on a few things, including:
-    # - the distance / similarity metric used by the VectorStore
-    # - the scale of your embeddings (OpenAI's are unit normed. Many others are not!)
-    # - embedding dimensionality
-    # - etc.
-    # This function converts the euclidean norm of normalized embeddings
-    # (0 is most similar, sqrt(2) most dissimilar)
-    # to a similarity function (0 to 1)
         return 1.0 - score / math.sqrt(2)
 class MyFAISS(FAISS):
     def __init__(
@@ -115,17 +107,6 @@ model = model.to(device)
 # print(model)
 encoder = model.embed_model
 dim =768
-
-# vector_text = []
-# for batch_data in vector_dataloader:
-#     data, label = batch_data[2:]
-#     for idx in data:
-#         for content in idx:
-#             vector_text.append(content)
-
-# # content_text_ = np.array(content_text)
-# print("vector_text",len(vector_text))
-
 testing_text = []
 labels_list = []
 labels_list_recall = []
@@ -140,10 +121,6 @@ for batch_data in testing_dataloader:
     # print(labels_list)
 labels_recall = [torch.cat(tensor).tolist() for tensor in labels_list_recall]
 labels = [tensor.item() for tensor in labels_list]
-#     #print(labels_list)
-# content_text_ = np.array(content_text)
-# print("testing_text",testing_text)
-#print("labels",labels)
 # 将doc进行embed
 content_list = []
 #embedding vector_store
@@ -165,8 +142,6 @@ index.add(vectors)
 
 # 优化
 # 数据嵌入
-
-
 # 将doc进行embed
 content_list_ = []
 #embedding vector_store
@@ -196,10 +171,6 @@ index_.add(vectors_)
 # TN - 不在topk中label为0的个数
 # 召回topK
 k = 30
-# count_all = 20 
-# count_all = len(vector_text) # 数据库大小
-# count_test = 20
-# count_test = len(testing_text)
 count = 0
 
 precision_all, recall_all, accuracy_all = 0, 0, 0
@@ -277,9 +248,6 @@ from sklearn.metrics import average_precision_score
 mAP = average_precision_score(label_pair, score_pair, average='macro')
 print("mAP_m3e:", mAP)
 
-# count_all = len(vector_text) # 数据库大小
-# count_test = 20
-# count_test = len(testing_text)
 count= 0
 precision_all, recall_all, accuracy_all = 0, 0, 0
 start_time = time.time()
@@ -371,81 +339,3 @@ plt.legend(loc='upper right')
 plt.grid(True)
 plt.show()
 
-
-
-# for batch_data in testing_dataloader:
-#     query = batch_data[1][0]
-#     # data, label = batch_data[2:]
-#     # print(len(data))
-#     query_feat = np.array([encoder.encode(query)]) # 得到baseline query embed
-#     #query_feat_ = encoder.encode(query) # 得到model query embed
-#     # query_feat_ = query_feat_.cpu()
-#     # query_feat_ = np.array([query_feat_.detach()])
-#     D, I = index.search(query_feat, k) #提取出ours的topk
-#     #print('scores, indices',D, I[0])
-#     tp, fp, fn, tn = 0, 0, 0, 0
-#     l0 = 0
-#     l1 = 0 # 表示真正label是１的个数
-#     for cnt in labels:
-#         if cnt == 1:
-#             l1+=1
-#         if cnt == 0:
-#             l0 +=1
-#     for i in I[0]:
-#         if labels[i] == 0:
-#             break
-#         elif labels[i] == 1: # 若labels=1的在模型中的label也等于１
-#             tp = tp+1
-#     # print("tp",tp)
-#     fp = k-tp
-#     # print("fp",fp)
-#     fn = l1-tp
-#     # print("fn",fn)
-#     tn = l0-fp
-#     # print("tn",tn)
-#     if tp != 0 and fp !=0:
-#         count +=1
-#         precision = float(tp/(tp+fp))
-#         recall = float(tp/(tp+fn))
-#         accuracy = float((tp+tn)/(tp+fp+tn+fn))
-
-#         precision_all += precision
-#         recall_all += recall
-#         accuracy_all += accuracy
-# # print("count",count)
-# print(f"precision_ave_m3e: {float(precision_all/count)}")
-# print(f"recall_ave_m3e: {float(recall_all/count)}")
-# print(f"accuracy_ave_m3e: {float(accuracy_all/count)}")
-# # content = [item for sublist in data for item in sublist]
-# end_time = time.time()
-# elapsed_time = end_time - start_time
-
-# print(f"Time spent: {elapsed_time:.5f} seconds")
-# import numpy as np
-# import matplotlib.pyplot as plt
-
-# # 定义混淆矩阵数据
-# confusion_matrix = np.array([[50, 10], [5, 35]])  # 这是一个2x2的混淆矩阵示例
-
-# # 创建热力图
-# plt.imshow(confusion_matrix, cmap='Blues')
-
-# # 添加颜色条
-# plt.colorbar()
-
-# # 添加坐标轴标签
-# class_names = ['Class 0', 'Class 1']  # 类别标签
-# plt.xticks(np.arange(len(class_names)), class_names)
-# plt.yticks(np.arange(len(class_names)), class_names)
-# plt.xlabel('Predicted label')
-# plt.ylabel('True label')
-
-# # 添加文本标签
-# thresh = confusion_matrix.max() / 2.0  # 用于设置文本颜色的阈值
-# for i in range(len(class_names)):
-#     for j in range(len(class_names)):
-#         plt.text(j, i, str(confusion_matrix[i, j]), ha='center', va='center',
-#                  color='white' if confusion_matrix[i, j] > thresh else 'black')
-
-# # 显示热力图
-# plt.show()

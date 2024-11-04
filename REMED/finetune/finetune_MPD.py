@@ -18,8 +18,8 @@ import json
 import time
 from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
-# from dataloader import kbDataset
-from Dataloder import *
+
+from data.data_process.Dataloder import *
 import faiss 
 import math
 # logger = logging.get_logger(__name__)
@@ -28,19 +28,11 @@ class MychatglmTrain:
         self, 
         model,
         device = None,
-        #args = None,
-        # tokenizer = None,
-        # data_collator = None
         ):                                                                                                   
             if device is None:
                 device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
             self.device = device
             self.model = model
-            # if args is None:
-            #     output_dir = "tmp_trainer"
-            #     logger.info(f"No `TrainingArguments` passed, using `output_dir={output_dir}`.")
-            #     args = TrainingArguments(output_dir=output_dir)#这里还可以加
-            # self.args = args
 
     def Model_score(self,ts1, ts2): # 求２个tensor之间的相似度
     # 先暂且使用cos来代替，后面可以优化用faiss来代替
@@ -61,12 +53,8 @@ class MychatglmTrain:
                 sim_true += torch.exp(scores[i])
             elif label == 0:
                 sim_false += torch.exp(scores[i])
-        # if sim_true + sim_false!=0:
-        # print("sim_true",sim_true)
-        # print("sim_false",sim_false)
-        # for j in range(len(lambdas_list)):
         
-        if sim_false == 0 or sim_true == 0: #这一行注释掉了
+        if sim_false == 0 or sim_true == 0: 
             loss = None 
         else:
             loss = -torch.log(sim_true/(sim_true + sim_false))
@@ -94,8 +82,6 @@ class MychatglmTrain:
         for i in D_[0]:
              score_sum += i
         lambdas_num = math.exp(score_sum)
-        # for i,value in enumerate(scores):
-        #regularization = torch.exp(value)/torch.exp(score_sum)
         return lambdas_num
     
 
@@ -115,7 +101,6 @@ class MychatglmTrain:
         start_time = time.time()
         optimizer = torch.optim.SGD(filter(lambda p: p.requires_grad, model.parameters()) ,lr=1e-2)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer,1.0,gamma=0.95)
-        # criterion = nn.BCEWithLogitsLoss()
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         #加载数据集
         vector_data = read_json_file("/mnt/workspace/pangtianqi/medical_kb_chatbot/train/dataset2_RP_train.json")
@@ -142,21 +127,11 @@ class MychatglmTrain:
             for batch_data in training_dataloader:
                 scores = []#初始化
                 lambdas_list = []
-                # loss_total = 0
                 model.train()
-                # query = batch_data[0]
-                # data = batch_data[1]
-                # labels = batch_data[2]
                 query = batch_data[0][0]
-                # data = batch_data[1]
                 data,labels = batch_data[1:]
-                # labels = [torch.tensor(value) for value in labels]
-                #formatted_data = [tuple(item[0]) for item in batch_data[1]]
                 query_embedding = model(query)
-                # print(query_embedding.shape)
-                #print("query",query)
-                #lambdas_num = self.compute_regularizer(model,query,formatted_data)
-                #print("lambdas_num",lambdas_num)
+
                 for idx in data:
                     for content in idx:
                         #print("content",content)
@@ -164,21 +139,12 @@ class MychatglmTrain:
                         #print(content_embedding.shape)
                         score = self.Model_score(query_embedding,content_embedding)
                         scores.append(score)
-                        # if lambdas_num != 0 :
-                        #lambdas = math.exp(score)/lambdas_num+1
-                        #lambdas_list.append(lambdas)
-                #regularization += (self.compute_regularizer(model,query,formatted_data,scores)/len(formatted_data))*1e-4
-                # print("scores",scores)
-                #print("lambdas_list",lambdas_list)
-                #lambdas_sum = math.log(sum(lambdas_list))
-                #print("lambdas_sum",lambdas_sum)
-                # print("regularization",regularization)
                 loss = self.Model_loss(labels,scores)
                 #print("loss",loss)
                 if loss is not None:
                     loss = loss + torch.tensor(regularization * value,requires_grad=True)
                     optimizer.zero_grad()
-                    loss.backward()#retain_graph=True这个参数不能加
+                    loss.backward()
                     torch.nn.utils.clip_grad_norm_(model.parameters(),0.5) # 防止梯度爆炸
                     optimizer.step()
                     total_train_step = total_train_step + 1
@@ -202,7 +168,7 @@ class MychatglmTrain:
         root = "model"
         if not os.path.exists(root):
             os.makedirs(root)
-        savepath = join(root, f'best_E5_chatglm1_L2_RP_v1.ph')
+        savepath = join(root, f'best_E5_chatglm1.ph')
         torch.save(best_model.state_dict(), savepath)
         print(f"saving checkpoint in {savepath}")
 

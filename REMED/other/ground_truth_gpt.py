@@ -1,5 +1,5 @@
 import os
-os.environ['OPENAI_API_BASE'] = "https://api.emabc.xyz/v1"
+os.environ['OPENAI_API_BASE'] = " put your openai key here"
 
 import openai
 import pandas as pd
@@ -33,15 +33,8 @@ class ChatGPTRobot(object):
             print('error!!', apiKey, e)
             return ''
 
-api_key = 'sk-Kzam4vrJZGmac9Bn57307a1d9fCb4798A47f827851D52488'
+api_key = 'put your openai key here'
 robot = ChatGPTRobot()
-
-# prompt=f"Generate three questions based on the title: {title}\n\nQuestion 1:",
-#   max_tokens=64,
-#   n = 3,
-#   stop=None,
-#   temperature=0.7,
-# )
 
 # Extract the generated questions from the API response
 questions = [choice['text'].strip() for choice in response.choices]
@@ -90,11 +83,3 @@ for batch_data in dataloader:
         labels.append(l)
 
     Labels.append(labels)
-    # data, label = batch_data[2:]
-    # n = batch_data[0][0]
-    # print("Question Number:", n)
-    # print("Public Question:", public_q)
-    # print("Batch Data Shape:", (len(data), len(data[0])))
-    # print(data)
-    # print("Batch Label:", len(label))
-    # print(label)
