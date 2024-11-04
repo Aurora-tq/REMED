@@ -19,6 +19,7 @@ self.embed_model = SentenceTransformer('your/path/to/moka-ai/m3e-base', device)
 ## Model
 
 Modify in 'train/run.py'
+
 Load chatglm1:
 ```sh
 from chatglm1 import *
