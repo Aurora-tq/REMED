@@ -46,7 +46,7 @@ python eval.py
 ## Citation
 If you are using the data/code/model provider here in a publication, please cite our paper:
 ```sh
-@INPROCEEDINGS{10651011,
+@INPROCEEDINGS{2024pangREMED,
   author={Pang, Tianqi and Tan, Kehui and Yao, Yujun and Liu, Xiangyang and Meng, Fanlong and Fan, Chenyou and Zhang, Xiaofan},
   booktitle={2024 International Joint Conference on Neural Networks (IJCNN)}, 
   title={REMED: Retrieval-Augmented Medical Document Query Responding with Embedding Fine-Tuning}, 
