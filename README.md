@@ -26,7 +26,6 @@ If you need to change a different model please refer to the following code:
 Load chatglm1:
 ```sh
 model =  MyGLU(hidden_size = 768)
-device = model.device
 model.load_state_dict(torch.load("model/best_chatglm1.ph"))
 model = model.to(device)
 ```
@@ -35,7 +34,6 @@ Load chatglm2：
 ```sh
 config = ChatGLMConfig()
 model = MyMLP(config)
-device = model.device
 model.load_state_dict(torch.load("model/best_chatglm2.ph"))
 model = model.to(device)
 ```
