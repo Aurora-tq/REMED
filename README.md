@@ -1,6 +1,6 @@
 # REMED
 ## _Retrieval-Augmented Medical Document Query Responding with Embedding Fine-Tuning_ [[Paper]](https://ieeexplore.ieee.org/document/10651011)
-Tianqi Pang, Kehui Tan1, Yujun Yao, Xiangyang Liu, Fanlong Meng, Chenyou Fan, Xiaofan Zhang
+Tianqi Pang, Kehui Tan, Yujun Yao, Xiangyang Liu, Fanlong Meng, Chenyou Fan, Xiaofan Zhang
 [![Code License](https://img.shields.io/badge/Code%20License-Apache_2.0-green.svg)](https://github.com/Aurora-tq/medical_retrieval/main/LICENSE) 
 
 ## DATASET
