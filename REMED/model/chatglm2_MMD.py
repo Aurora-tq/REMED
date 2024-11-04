@@ -55,8 +55,8 @@ class MyMLP(torch.nn.Module):
             device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.device = device
         # embedding
-        #self.embed_model = SentenceTransformer('/mnt/workspace/pangtianqi/medical_kb_chatbot/moka-ai/m3e-base', device)
-        self.embed_model = SentenceTransformer('/mnt/workspace/pangtianqi/medical_kb_chatbot/e5-base-v2', device)
+        self.embed_model = SentenceTransformer('your/path/to/moka-ai/m3e-base', device)
+        # self.embed_model = SentenceTransformer('/mnt/workspace/pangtianqi/medical_kb_chatbot/e5-base-v2', device)
         self.embedding_size = self.embed_model.get_sentence_embedding_dimension()
         print(f"Embedding size: {self.embedding_size}")  
         # Project to 4h. If using swiglu double the output width, see https://arxiv.org/pdf/2002.05202.pdf

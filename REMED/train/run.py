@@ -1,9 +1,10 @@
 #from train import MychatglmTrain
-from finetune_dataset2 import MychatglmTrain
-from chatglm2 import *
-from chatglm1 import *
+from finetune.finetune_MPD import MychatglmTrain
+from model.chatglm2_MMD import *
+from model.chatglm1_MMD import *
+from model.chatglm1_MPD import *
 # from Dataloder import *
-from configuration_chatglm import ChatGLMConfig
+from model.configuration_chatglm import ChatGLMConfig
 if __name__ == "__main__":
     config = ChatGLMConfig()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

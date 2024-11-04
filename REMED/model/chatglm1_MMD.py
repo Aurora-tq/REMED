@@ -80,8 +80,8 @@ class MyGLU(torch.nn.Module):
         if device is None:
             device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.device = device
-        #self.embed_model = SentenceTransformer('/mnt/workspace/pangtianqi/medical_kb_chatbot/moka-ai/m3e-base', device)
-        self.embed_model = SentenceTransformer('/mnt/workspace/pangtianqi/medical_kb_chatbot/e5-base-v2', device)
+        self.embed_model = SentenceTransformer('your/path/to/moka-ai/m3e-base', device)
+        #self.embed_model = SentenceTransformer('/mnt/workspace/pangtianqi/medical_kb_chatbot/e5-base-v2', device)
         embedding_size = self.embed_model.get_sentence_embedding_dimension()
         print(f"Embedding size: {embedding_size}")
         # if vs_path is None:
@@ -112,10 +112,6 @@ class MyGLU(torch.nn.Module):
     # def init_embedding(self, embedding_model: str = EMBEDDING_MODEL, embedding_device=EMBEDDING_DEVICE, top_k=VECTOR_SEARCH_TOP_K):
     #     self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model], model_kwargs={'device': embedding_device})
     #     self.top_k = top_k
-    
-    # def init_vector_store(self):
-    #     self.vector_store = MyFAISS.load_local(self.vs_path, self.embeddings)
-    #     return 
 
     def forward(self,data):
         """

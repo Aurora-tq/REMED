@@ -19,7 +19,7 @@ import time
 from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
 # from dataloader import kbDataset
-from Dataloder import *
+from data.data_process.Dataloder import *
 import faiss 
 import math
 # logger = logging.get_logger(__name__)

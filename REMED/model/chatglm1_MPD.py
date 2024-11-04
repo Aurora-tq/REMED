@@ -81,7 +81,7 @@ class MyGLU(torch.nn.Module):
             device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.device = device
         #self.embed_model = SentenceTransformer('/mnt/workspace/pangtianqi/medical_kb_chatbot/moka-ai/m3e-base', device)
-        self.embed_model = SentenceTransformer('/mnt/workspace/pangtianqi/medical_kb_chatbot/e5-base-v2', device)
+        self.embed_model = SentenceTransformer('your/path/to/e5-base-v2', device)
         embedding_size = self.embed_model.get_sentence_embedding_dimension()
         print(f"Embedding size: {embedding_size}")
         # if vs_path is None:
