@@ -50,6 +50,8 @@ train: training with data without label_improved
 
 finetune: training with label_improved data
 
+eval: evaluate the search results of the retriever using evaluation criteria such as accuracy, recall, F1 value, etc.
+
 ## Citation
 If you are using the data/code/model provider here in a publication, please cite our paper:
 ```sh
