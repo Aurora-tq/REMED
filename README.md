@@ -43,6 +43,12 @@ Bechmark:M3E(Chinese),E5(English)
 ```sh
 python eval.py
 ```
+## Notes
+model: the main model design
+
+train: training with data without label_improved
+
+finetune: training with label_improved data
 
 ## Citation
 If you are using the data/code/model provider here in a publication, please cite our paper:
